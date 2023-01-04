@@ -45,14 +45,23 @@
 
         <div class="main-content">
           <!-- <p class="warning-text">Please refresh the page after 5seconds to see updated information.</p> -->
-          <p>Enter your password.</p>
-          <form class="form">
-            <input type="password" name="password">
-            <br>
-            <input type="submit" class="submit-button">
-          </form>
-          <p class="succes-message" style="color: green;">Congrtualtions, door is opening..</p>
-          <p class="fail-message" style="color: red;">Wrong Password. Please try again.</p>
+          <div class="fingerprint-notifier">
+            <h4>Waiting for fingerprint. Please refresh the page after giving fingerprint.</h4>
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          <div class="password-field">
+            <h4>Enter password for <span class="username"></span></h4>
+            <form class="form">
+              <input type="password" name="password">
+              <br>
+              <input type="submit" class="submit-button">
+            </form>
+            <p class="succes-message" style="color: green;">Congrtualtions, door is opening..</p>
+            <p class="fail-message" style="color: red;">Wrong Password. Please try again</p>
+          </div>
+          
           
           <!-- <div class="status-checking">
               Verifying
