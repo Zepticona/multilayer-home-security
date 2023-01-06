@@ -1,6 +1,8 @@
 document.querySelector('.password-field').style.display='none';
 document.querySelector('.succes-message').style.display='none';
 document.querySelector('.fail-message').style.display='none';
+document.querySelector('.no-tries-remianing').style.display = 'none';
+let triesRemaining = 1;
 
 fetch('https://api.thingspeak.com/channels/1996273/feeds.json?api_key=0JYUOL5Q31LMBMFK&results=2')
 .then(res => res.json())
@@ -31,11 +33,15 @@ document.querySelector('.form').addEventListener('submit', (e) => {
             console.log('Fingerprint user found with id: '+databaseData.users[user].id);
             requiredPassword = databaseData.users[user].password;
         } else {
-            console.log(databaseData.users[user].id + " is not equal to " + fingerprintId )
+            
         }
     }
 
     const userInput = Object.fromEntries(new FormData(e.target).entries());
+    if(!triesRemaining) {
+        document.querySelector('.password-field').style.display='none';
+        document.querySelector('.no-tries-remianing').style.display = 'block';
+    }
     if(userInput['password']==requiredPassword) {
         fetch('https://api.thingspeak.com/update?api_key=8GH5FISIM2GY8Z4L&field5=0&field6=0&field7=1')
         .then(res => res.json())
@@ -43,17 +49,22 @@ document.querySelector('.form').addEventListener('submit', (e) => {
             document.querySelector('.succes-message').style.display='block';        
             document.querySelector('.fail-message').style.display='none';        
         });
-    } else {
-        fetch('https://api.thingspeak.com/update?api_key=8GH5FISIM2GY8Z4L&field5=1&field6=0&field7=0')
-        .then(res => res.json())
-        .then(data => {        
-            document.querySelector('.succes-message').style.display='none';        
-            document.querySelector('.fail-message').style.display='block';           
-        });
+    } else {        
+        document.querySelector('.succes-message').style.display='none';        
+        document.querySelector('.fail-message').style.display='block';  
+        document.querySelector('.tries-remaining').innerHTML = triesRemaining;
+        triesRemaining--;
     }
-
     
 });
+document.querySelector(".restart").addEventListener("click", function() {
+    fetch('https://api.thingspeak.com/update?api_key=8GH5FISIM2GY8Z4L&field5=1&field6=0&field7=0')
+    .then(res => res.json())
+    .then(data => {       
+        setTimeout(() => location.reload(),1000) ;        
+    })
+    .catch(err=>console.log(err));
+})
 
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js'
